@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <title>Hear; Here</title>
+    <title>SWM Facilities in Metro Manila</title>
     <link href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" rel="stylesheet">
     <link href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
@@ -27,12 +27,12 @@
     <body oncontextmenu="return false">
         <div id="wrapper">
             <div id="header">                
-                <h1>Hear; Here</h1>
-                <h2>Visit <a href="https://mentalhealthawhereness.com">mentalhealthawhereness.com</a></h2>
+                <h1>SWM Facilities in Metro Manila</h1>
+                <h2>Visit <a href="https://www.mapcontrib.xyz/t/a519b2-Solid_Waste_Management_Facilities#</a></h2>
             </div>
             <div id="controls">
-                <input onclick="startEdits()" type="button" value="Listen.">
-                <input onclick="stopEdits()" type="button" value="Or talk to someone.">
+                <input onclick="startEdits()" type="button" value="Add points.">
+                <input onclick="stopEdits()" type="button" value="Done">
             </div>
             <div id="map"></div>
             <div id="credits">
@@ -40,16 +40,16 @@
                 <p>Mental Health aWHEREness &copy;2019, Sandra Tabinas</p>
             </div>
         </div>
-        <div id="dialog" title="Here.">
+        <div id="dialog" title="Add missing data here">
             <form>
                 <fieldset style="border: none;">
                     <ul style="list-style-type: none; padding-left: 0px">
-                        <li><label for="nickname">Nickame</label></li>
-                        <li><input id="nickname" name="nickname" placeholder="Your nickname" size="40" type="text" required></li> 
-                        <li><label for="note">About you + Contact Details</label></li>
-                        <li><textarea cols="40" id="note" name="note" placeholder="Tell us a bit about yourself and why you're willing to listen to someone. Or a short message for someone who may be going through something right now." rows="5"></textarea></li>
-                        <li><label for="hear">Hear</label></li>
-                        <li><textarea cols="40" id="hear" name="hear" placeholder="How can someone reach out to you? (Chat through your public social media account, call or text via a phone number you're willing to share, etc.)" rows="5"></textarea></li>                                                
+                        <li><label for="Name">Name of facility</label></li>
+                        <li><input id="nickname" name="nickname" placeholder="Name of Facility" size="40" type="text" required></li> 
+                        <li><label for="type_of_facility">Information</label></li>
+                        <li><textarea cols="40" id="type_of_facility" name="type_of_facility" placeholder="Tell us a bit about the facility" rows="5"></textarea></li>
+                        <li><label for="capacity">Location</label></li>
+                        <li><textarea cols="40" id="capacity" name="capacity" placeholder="Any other information?" rows="5"></textarea></li>                                                
                     </ul>
                     <input style="position:absolute; top:-1000px" tabindex="-1" type="submit">
                 </fieldset>
@@ -72,9 +72,9 @@
 
         <script>
             var config = { //TODO: Change to your username, insert function on Carto, and Carto tablename
-                cartoUsername: "anditabinas",
+                cartoUsername: "yalubill",
                 cartoInsertFunction: "insert_crowd_mapping_data",
-                cartoTablename: "hearhere",
+                cartoTablename: "mappynar3try",
                 mapcenter: [12.85985, 114.03808],
                 drawOptions: {
                     draw: {
@@ -91,7 +91,7 @@
             };
 
             var cartoData = null; //These adds data from Carto using the SQL API, declares variables, and writes the SQL selection query
-            var sqlQuery = "SELECT the_geom, name, note, hear FROM " + config.cartoTablename;
+            var sqlQuery = "SELECT the_geom, name, type_of_facility, capacity" + config.cartoTablename;
             var map = L.map('map', {
                 center: config.mapcenter,
                 zoom: 5
@@ -121,7 +121,7 @@
                 $.getJSON(getData, function(data) {
                     cartoData = L.geoJson(data, {
                         onEachFeature: function(feature, layer) {
-                            layer.bindPopup('<b>Name: <\/b>' + feature.properties.name + '<br>' + '<b>Here: <\/b>' + feature.properties.note + '<br>' + '<b>Hear: <\/b>' + feature.properties.hear + '');
+                            layer.bindPopup('<b>Name: <\/b>' + feature.properties.name + '<br>' + '<b>Type_of_facility: <\/b>' + feature.properties.note + '<br>' + '<b>Capacity: <\/b>' + feature.properties.hear + '');
                         }
                     }).addTo(map);
                 });
@@ -162,7 +162,7 @@
                     of: "#map"
                 },
                 buttons: {
-                    "Hear.": setData,
+                    "Submit": setData,
                     Cancel: function() {
                         dialog.dialog("close");
                         refreshLayer();
@@ -189,9 +189,9 @@
                     var drawing = "'" + JSON.stringify(layer.toGeoJSON().geometry) + "'", //Converts the drawing to a GeoJSON
                         sql = "SELECT " + config.cartoInsertFunction + "("; //Constructs the SQL Query from the entered parameters on the dialog/form
                     sql += drawing;
-                    sql += "," + enteredNickname;
-                    sql += "," + enteredNote;                    
-                    sql += "," + enteredHear;
+                    sql += "," + enteredName;
+                    sql += "," + enteredType_of_facility;                    
+                    sql += "," + enteredCapacity;
                     sql += ");";
                     console.log(drawing);
 
