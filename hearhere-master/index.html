@@ -211,9 +211,9 @@
                         }
                     });
                     var newData = layer.toGeoJSON();
-                    newData.properties.name = nickname.value;
-                    newData.properties.note = note.value;
-                    newData.properties.hear = hear.value;                    
+                    newData.properties.name = name.value;
+                    newData.properties.type_of_facility = type_of_facility.value;
+                    newData.properties.capacity = capacity.value;                    
                     cartoData.addData(newData);
                 });
 
